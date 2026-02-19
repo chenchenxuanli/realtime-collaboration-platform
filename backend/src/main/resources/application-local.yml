@@ -1,0 +1,22 @@
+# Local profile: reads DB/Redis from environment variables.
+# Use with: spring.profiles.active=local
+# Ensure .env is set (see .env.example) and docker-compose is running.
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:realtime_collab}
+    username: ${DB_USER:collab}
+    password: ${DB_PASSWORD:collab_secret}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    com.chenxuan.realtimecollab: DEBUG
+    org.hibernate.SQL: DEBUG

@@ -1,0 +1,68 @@
+# Default configuration (non-local). Override with application-local.yml when using local profile.
+spring:
+  application:
+    name: realtime-collaboration-platform
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# JPA / PostgreSQL (defaults; override in local)
+spring.jpa:
+  hibernate:
+    ddl-auto: validate
+  show-sql: false
+  open-in-view: false
+  properties:
+    hibernate:
+      format_sql: true
+      default_schema: public
+  database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+spring.datasource:
+  url: jdbc:postgresql://localhost:5432/realtime_collab
+  username: collab
+  password: collab_secret
+  driver-class-name: org.postgresql.Driver
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 2
+
+# Redis (defaults; override in local)
+spring.data.redis:
+  host: localhost
+  port: 6379
+  timeout: 2000ms
+  lettuce:
+    pool:
+      max-active: 8
+      max-idle: 8
+      min-idle: 0
+
+# Actuator (health only for Phase 1)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Logging (logback default)
+logging:
+  level:
+    root: INFO
+    com.chenxuan.realtimecollab: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+
+# Springdoc / Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
