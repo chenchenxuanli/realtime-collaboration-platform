@@ -54,6 +54,7 @@ This repo is structured as a **modular monolith**: backend (Spring Boot 3, Java 
 | Backend   | http://localhost:8080 |
 | API base  | http://localhost:8080/api |
 | Health    | http://localhost:8080/api/health |
+| Register  | POST http://localhost:8080/api/auth/register |
 | Swagger UI| http://localhost:8080/swagger-ui.html |
 | Actuator  | http://localhost:8080/actuator |
 | Frontend  | http://localhost:5173 (dev) |
@@ -66,8 +67,9 @@ This repo is structured as a **modular monolith**: backend (Spring Boot 3, Java 
 
 ## Phase Plan
 
-- **Phase 1 (current):** Project init, skeleton, Docker (Postgres + Redis), health endpoint, minimal frontend, docs and ADR. No auth, WebSocket, or business features.
-- **Phase 2:** Auth (e.g. JWT), WebSocket/realtime layer, rooms and basic chat.
+- **Phase 1:** Project init, skeleton, Docker (Postgres + Redis), health endpoint, minimal frontend, docs and ADR.
+- **Phase 2 (in progress):** Auth (registration done; JWT login and rooms to follow), WebSocket/realtime layer, rooms and basic chat.
+  - Step 2 done: **User registration** — `POST /api/auth/register` (BCrypt, duplicate email rejected).
 - **Phase 3:** Todo/shared tasks, presence, polish and production-readiness.
 
 ## Verification
@@ -83,6 +85,7 @@ docker-compose ps   # ensure postgres + redis are up
 cd backend && mvn test
 # Then run app (with Docker up): mvn spring-boot:run -Dspring-boot.run.profiles=local
 # In another terminal: curl http://localhost:8080/api/health  -> {"status":"ok"}
+# Register: curl -X POST http://localhost:8080/api/auth/register -H "Content-Type: application/json" -d '{"email":"u@example.com","password":"secret6","displayName":"User"}'
 
 # 3. Frontend
 cd frontend && npm install && npm run dev

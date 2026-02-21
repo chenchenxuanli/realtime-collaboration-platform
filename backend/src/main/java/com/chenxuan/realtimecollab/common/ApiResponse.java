@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Unified API response wrapper. Use for consistent JSON structure across endpoints.
- * Phase 1: definition only; minimal usage until Phase 2+.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ApiResponse<T>(

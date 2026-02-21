@@ -1,39 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import RegisterPage from './pages/RegisterPage';
+import styles from './App.module.css';
 
-interface HealthResponse {
-  status: string
-}
-
-export default function App() {
-  const [backendStatus, setBackendStatus] = useState<string>('loading...')
-  const [error, setError] = useState<string | null>(null)
+function BackendStatus() {
+  const [status, setStatus] = useState<string>('…');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/health')
       .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
       })
-      .then((data: HealthResponse) => setBackendStatus(data.status ?? 'unknown'))
-      .catch((err) => {
-        setError(err.message ?? 'Failed to reach backend')
-        setBackendStatus('error')
-      })
-  }, [])
+      .then((data: { status?: string }) => setStatus(data.status ?? 'unknown'))
+      .catch(() => {
+        setError('Backend unreachable');
+        setStatus('error');
+      });
+  }, []);
 
   return (
-    <main style={{ padding: '2rem', textAlign: 'center' }}>
-      <h1>Realtime Collaboration Platform</h1>
-      <p>
-        <strong>Backend status:</strong>{' '}
-        {error ? (
-          <span style={{ color: 'crimson' }}>{error}</span>
-        ) : (
-          <span style={{ color: backendStatus === 'ok' ? 'green' : 'inherit' }}>
-            {backendStatus}
-          </span>
-        )}
-      </p>
-    </main>
-  )
+    <span className={styles.backendStatus}>
+      Backend: {error ? <span className={styles.backendError}>{error}</span> : status}
+    </span>
+  );
+}
+
+export default function App() {
+  return (
+    <div className={styles.app}>
+      <header className={styles.header}>
+        <h1 className={styles.logo}>Realtime Collaboration</h1>
+        <BackendStatus />
+      </header>
+      <main className={styles.main}>
+        <RegisterPage />
+      </main>
+    </div>
+  );
 }

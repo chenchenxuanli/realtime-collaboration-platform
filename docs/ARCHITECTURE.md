@@ -1,36 +1,39 @@
-# Architecture (Phase 1)
+# Architecture
 
-Phase 1 establishes the skeleton only. This document is a placeholder for the modular monolith architecture; it will be expanded in later phases.
+Modular monolith backend with clear package boundaries. Auth module implements registration; login and rooms to follow.
 
 ## High-Level Style
 
-- **Modular monolith:** One deployable backend with clear package boundaries (`auth`, `room`, `chat`, `todo`, `event`, `realtime`, `common`, `persistence`). No microservices in Phase 1.
-- **Frontend:** Single React app (Vite), talking to backend REST API; WebSocket and realtime features come in Phase 2+.
+- **Modular monolith:** One deployable backend with packages: `auth`, `room`, `chat`, `todo`, `event`, `realtime`, `common`, `persistence`.
+- **Frontend:** Single React app (Vite), talking to backend REST API; WebSocket and realtime in later phases.
 
-## Backend Module Layout (Skeleton)
+## Backend Module Layout
 
 ```
 com.chenxuan.realtimecollab/
-├── common/          # Shared response wrapper, error handling, config
+├── common/          # Shared response wrapper, global exception handling, config
 ├── health/          # Health check API (/api/health)
-├── auth/            # (Phase 2+) Authentication / authorization
-├── room/            # (Phase 2+) Rooms
-├── chat/            # (Phase 2+) Chat
-├── todo/            # (Phase 3+) Shared todos
-├── event/           # (Phase 2+) Domain events / messaging
-├── realtime/        # (Phase 2+) WebSocket / realtime
-└── persistence/     # JPA entities, repositories (shared data access)
+├── auth/            # Registration (done), login and JWT (Phase 2)
+│   ├── config/      # SecurityConfig (PasswordEncoder; permitAll for now)
+│   ├── dto/         # RegisterRequest, UserResponse
+│   └── service/     # AuthService
+├── room/            # (Phase 2) Rooms
+├── chat/            # (Phase 2) Chat
+├── todo/            # (Phase 3) Shared todos
+├── event/           # (Phase 2) Domain events / messaging
+├── realtime/        # (Phase 2) WebSocket / realtime
+└── persistence/     # JPA entities (User), repositories (UserRepository)
 ```
 
-## Infrastructure (Phase 1)
+## Infrastructure
 
 - **PostgreSQL:** Primary database (JPA/Hibernate).
 - **Redis:** Caching / session / pub-sub (Phase 2+); connection configured in Phase 1.
 - **Docker Compose:** Postgres and Redis for local development.
 
-## Diagram (Placeholder)
+## Diagram
 
-A more detailed diagram (components, data flow, WebSocket and Redis usage) will be added in Phase 2 when auth, rooms and realtime are implemented.
+A detailed diagram (data flow, WebSocket, Redis) will be added when rooms and realtime are implemented.
 
 ## Docs
 
